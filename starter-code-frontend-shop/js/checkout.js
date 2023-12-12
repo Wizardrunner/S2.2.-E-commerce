@@ -26,12 +26,12 @@ function validate() {
     resetErrorMessage(errorAddress);
     
     // Validation for First Name
-    if (fName.value.trim() === "" || fName.value.length < 3 ) {
+    if (!/^[a-zA-Z]+$/.test(fName.value.trim()) || fName.value.length < 3 ) {
         displayErrorMessage(errorName, "This field is required and must have, at least, 3 characters");
     }
 
     // Validation for Last Name
-    if (fLastN.value.trim() === "" || fLastN.value.length < 3 )  {
+    if (!/^[a-zA-Z]+$/.test(fLastN.value.trim()) || fLastN.value.length < 3 )  {
         displayErrorMessage(errorLastN, "This field is required and must have, at least, 3 characters");
     }
 
