@@ -11286,3 +11286,7 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+
+.form-group {
+  margin-bottom: 1rem;
+}
