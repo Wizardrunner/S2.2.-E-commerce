@@ -72,6 +72,8 @@ var products = [
 // Improved version of cartList. Cart is an array of products (objects), but each one has a quantity field to define its quantity, so these products are not repeated.
 var cart = [];
 var countProductElement = document.getElementById('count_product');
+var totalPriceElement = document.getElementById('total_price');
+var cartListElement = document.getElementById('cart_list');
 
 var total = 0;
 
@@ -114,30 +116,37 @@ function calculateTotal() {
 
 // Exercise 4
 function applyPromotionsCart() {
-    // Apply promotions to each item in the array "cart"
-    for (let i = 0; i < cart.length; i++) {
+    for (var i = 0; i < cart.length; i++) {
         var product = cart[i];
 
         // Check if the product has an offer and apply the discount
-            if (product.offer) {
-                if (product.offer.number >= 3 && product.name === 'cooking oil') {
-                // Apply 20% discount for buying 3 or more oil products
-                    product.subtotalWithDiscount = product.price * (1 - product.offer.percent / 100);
-                } else if (product.offer.number >= 10 && product.name === 'Instant cupcake mixture') {
-                // Apply 30% discount for buying 10 or more cupcake mixture products
-                    product.subtotalWithDiscount = product.price * (1 - product.offer.percent / 100);
-                } else {
+        if (product.offer) {
+            var quantity = cart.filter(item => item.id === product.id).length;
+
+            if (quantity >= product.offer.number) {
+                // Apply the discount to all items of this product in the cart
+                for (var j = 0; j < cart.length; j++) {
+                    if (cart[j].id === product.id) {
+                        cart[j].subtotalWithDiscount = cart[j].price * (1 - product.offer.percent / 100);
+                    }
+                }
+            } else {
                 // No applicable offer, so set subtotalWithDiscount to the original price
-                product.subtotalWithDiscount = product.price;   
+                for (var k = 0; k < cart.length; k++) {
+                    if (cart[k].id === product.id) {
+                        cart[k].subtotalWithDiscount = undefined;
+                    }
                 }
             }
+        } else {
+            // No offer, so set subtotalWithDiscount to the original price
+            product.subtotalWithDiscount = undefined;
         }
     }
+    console.log("Cart after applying promotions:", cart);
+}
 
 // Exercise 5
-var countProductElement = document.getElementById('count_product');
-var totalPriceElement = document.getElementById('total_price');
-var cartListElement = document.getElementById('cart_list');
 
 function printCart() {
         // Clear previous content in the modal body
@@ -149,12 +158,16 @@ function printCart() {
     // Check if the cart is not empty
     if (cart.length > 0) {
         var totalPrice = 0;
+        var groupedCart = groupCartByProduct();
 
-        for (let i = 0; i < cart.length; i++) {
-            var product = cart[i];
-
+        for (var productID in groupedCart) {
+                if (groupedCart.hasOwnProperty(productID)) {
+                    var product = groupedCart[productID][0]; // Take the first item as they are the same product
+                    var quantity = groupedCart[productID].length;
+                }
             // Calculate total price for the product (with discount if applicable)
             var productTotal = product.subtotalWithDiscount !== undefined ? product.subtotalWithDiscount : product.price;
+            productTotal *= quantity;
             totalPrice += productTotal;
 
             // Create a new row for each product in the cart_list tbody
@@ -177,7 +190,20 @@ function printCart() {
     }
 }
 
+function groupCartByProduct() {
+    //Create a map to group cart items by product id
+    var groupedCart = {};
 
+    for (var i = 0; i < cart.length; i++) {
+        var productID = cart[i].id;
+
+        if(!groupedCart[productID]) {
+            groupedCart[productID] = [];
+        }
+        groupedCart[productID].push(cart[i]);
+    }
+    return groupedCart;
+}
 // ** Nivell II **
 
 // Exercise 7
@@ -186,5 +212,6 @@ function removeFromCart(id) {
 }
 
 function open_modal() {
-    printCart();
+    applyPromotionsCart(); // Apply promotions before printing the cart
+    printCart(); // Print the cart in the modal
 }
