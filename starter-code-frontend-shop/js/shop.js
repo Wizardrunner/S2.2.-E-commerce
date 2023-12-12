@@ -143,7 +143,6 @@ function applyPromotionsCart() {
             product.subtotalWithDiscount = undefined;
         }
     }
-    console.log("Cart after applying promotions:", cart);
 }
 
 // Exercise 5
