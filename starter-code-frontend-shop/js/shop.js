@@ -79,28 +79,43 @@ var total = 0;
 
 // Exercise 1
 function buy(id) {
-    // 1. Loop for to the array products to get the item to add to cart
-        for (var i = 0; i < products.length; i++) {
-            if (products[i].id === id) {
-            // 2. Add found product to the cart array
-            cart.push(products[i]);
+    const selectedProduct = products.find(product => product.id === id);
 
-                // Update the count_product element
-                countProductElement.innerText = cart.length;
+    if (selectedProduct) {
+        const existingProduct = cart.find(product => product.id === id);
 
-            console.log(products[i].name + " added to cart.");
-            return;
-            }
+        if (existingProduct) {
+            // If the product is already in the cart, increase its quantity
+            existingProduct.quantity++;
+        } else {
+            // If the product is not in the cart, add it with a quantity of 1
+            const newProduct = { ...selectedProduct, quantity: 1 };
+            cart.push(newProduct);
         }
-}
 
-// Exercise 2     
+        // Update the count_product element
+        countProductElement.innerText = cart.reduce((total, product) => total + product.quantity, 0);
+
+        console.log(selectedProduct.name + " added to cart.");
+
+        // Explicitly call printCart to update the modal content
+        printCart();
+    }
+}
+    
+// Exercise 2
 function cleanCart() {
     cart = [];
     countProductElement.innerText = '0';
 
-    console.log('Cart is cleaned.')
+    // Reset the total price to 0
+    total = 0;
+    totalPriceElement.innerText = total.toFixed(2);
 
+    console.log('Cart is cleaned.');
+
+    // Update the modal content after cleaning the cart
+    open_modal();
 }
 
 // Exercise 3
@@ -121,38 +136,36 @@ function applyPromotionsCart() {
 
         // Check if the product has an offer and apply the discount
         if (product.offer) {
-            var quantity = cart.filter(item => item.id === product.id).length;
+            var quantity = cart.reduce((total, item) => (item.id === product.id ? total + item.quantity : total), 0);
 
             if (quantity >= product.offer.number) {
                 // Apply the discount to all items of this product in the cart
                 for (var j = 0; j < cart.length; j++) {
                     if (cart[j].id === product.id) {
-                        cart[j].subtotalWithDiscount = cart[j].price * (1 - product.offer.percent / 100);
+                        cart[j].subtotalWithDiscount = cart[j].price * cart[j].quantity * (1 - product.offer.percent / 100);
                     }
                 }
             } else {
                 // No applicable offer, so set subtotalWithDiscount to the original price
                 for (var k = 0; k < cart.length; k++) {
                     if (cart[k].id === product.id) {
-                        cart[k].subtotalWithDiscount = undefined;
+                        cart[k].subtotalWithDiscount = cart[k].price * cart[k].quantity;
                     }
                 }
             }
         } else {
             // No offer, so set subtotalWithDiscount to the original price
-            product.subtotalWithDiscount = undefined;
+            product.subtotalWithDiscount = product.price * product.quantity;
         }
     }
 }
 
 // Exercise 5
-
 function printCart() {
-        // Clear previous content in the modal body
-        cartListElement.innerHTML = '';
+    // Clear previous content in the modal body
+    cartListElement.innerHTML = '';
 
     // Fill the shopping cart modal manipulating the shopping cart dom
-
 
     // Check if the cart is not empty
     if (cart.length > 0) {
@@ -160,26 +173,32 @@ function printCart() {
         var groupedCart = groupCartByProduct();
 
         for (var productID in groupedCart) {
-                if (groupedCart.hasOwnProperty(productID)) {
-                    var product = groupedCart[productID][0]; // Take the first item as they are the same product
-                    var quantity = groupedCart[productID].length;
-                }
-            // Calculate total price for the product (with discount if applicable)
-            var productTotal = product.subtotalWithDiscount !== undefined ? product.subtotalWithDiscount : product.price;
-            productTotal *= quantity;
-            totalPrice += productTotal;
+            if (groupedCart.hasOwnProperty(productID)) {
+                var product = groupedCart[productID][0]; // Take the first item as they are the same product
+                var quantity = groupedCart[productID].reduce((total, item) => total + item.quantity, 0);
 
-            // Create a new row for each product in the cart_list tbody
-            var row = cartListElement.insertRow();
-            row.innerHTML = `
-            <td>${product.name}</td>
-            <td>$${product.price.toFixed(2)}</td>
-            <td>${cart.filter(item => item.id === product.id).length}</td>
-            <td>$${productTotal.toFixed(2)}</td>
-            `;
+                // Calculate total price for the product (with discount if applicable)
+                var productTotal = product.subtotalWithDiscount !== undefined ? product.subtotalWithDiscount : product.price * quantity;
+                totalPrice += productTotal;
+
+                // Create a new row for each product in the cart_list tbody
+                var row = cartListElement.insertRow();
+                row.innerHTML = `
+                    <td>${product.name}</td>
+                    <td>$${product.price.toFixed(2)}</td>
+                    <td>${quantity}</td>
+                    <td>$${productTotal.toFixed(2)}</td>
+                    <td>
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeFromCart(${product.id})">
+                            Remove
+                        </button>
+                    </td>
+                `;
+            }
         }
-            // Update the total_price span
-            totalPriceElement.innerText = totalPrice.toFixed(2);
+
+        // Update the total_price span
+        totalPriceElement.innerText = totalPrice.toFixed(2);
     } else {
         // IF the cart is empty, display a message in the cart_list tbody
         var emptyRow = cartListElement.insertRow();
@@ -207,10 +226,46 @@ function groupCartByProduct() {
 
 // Exercise 7
 function removeFromCart(id) {
+    // Find the index of the product with the given id in the cart
+    const index = cart.findIndex(product => product.id === id);
 
+    // If the product is in the cart
+    if (index !== -1) {
+        // Decrease the quantity by 1
+        cart[index].quantity--;
+
+        // If the quantity becomes zero, remove the product from the cart
+        if (cart[index].quantity === 0) {
+            cart.splice(index, 1);
+        }
+
+        // Update promotions after modifying the cart
+        applyPromotionsCart();
+
+        // Update the count product element
+        countProductElement.innerText = cart.reduce((total, product) => total + product.quantity, 0);
+
+        // Explicitly call printCart to update the modal content
+        printCart();
+
+        // Recalculate the total price after removing from the cart
+        total = calculateTotal();
+        totalPriceElement.innerText = total.toFixed(2);
+
+        // If the cart is empty, reset the total to 0
+        if (cart.length === 0) {
+            total = 0;
+            totalPriceElement.innerText = total.toFixed(2);
+        } else {
+            // Recalculate the total price with promotions if the cart is not empty
+            total = cart.reduce((acc, product) => acc + (product.subtotalWithDiscount || product.price * product.quantity), 0);
+            totalPriceElement.innerText = total.toFixed(2);
+        }
+    }
 }
 
 function open_modal() {
+    total = 0; // Reset the total price to 0
     applyPromotionsCart(); // Apply promotions before printing the cart
     printCart(); // Print the cart in the modal
 }
