@@ -11287,6 +11287,52 @@ textarea.form-control-lg {
   }
 }
 
+/* Custom CSS for the form */
+
 .form-group {
   margin-bottom: 1rem;
+}
+
+h2.text-center, h5, a.nav-link {
+  color: #b91879 !important;
+}
+/* Custom CSS for the header section ddcbb5 */ 
+header {
+  background-color: #dac8b2;
+  position: relative;
+  overflow: hidden;
+  text-align: left;
+}
+
+.header-image {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: auto;
+  height: 297px;
+  z-index: -1;
+}
+
+.header-content {
+  position: relative;
+  z-index: 1;
+  color: #ffffff; /* Text color for title and lead */
+}
+
+.IT-Academy {
+  background-color: #b91879;
+  display: flex;
+  justify-content: center;
+}
+
+@media (max-width: 1013px) {
+  .header-image {
+    height: 352px;
+  }
+}
+
+@media (max-width: 503px) {
+  .header-image {
+    display: none;
+  }
 }
