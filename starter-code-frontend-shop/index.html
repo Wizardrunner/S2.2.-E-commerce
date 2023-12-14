@@ -16,6 +16,9 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
 		integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
 		crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+	<link rel="stylesheet" href="./css/styles.css">
+
 </head>
 
 <body data-bs-spy="scroll" data-bs-target="#navbar-example2" data-bs-offset="50">
@@ -31,7 +34,7 @@
 				</button>
 				<ul class="navbar-nav me-3 me-lg-0 d-flex flex-row align-items-center">
 					<li class="dropdown search-dropdown nav-item py-lg-3">
-						<a href="javascript:void(0)" class="btn btn-outline-dark flex-center" type="button"
+						<a href="javascript:void(0)" class="btn btn-warning flex-center" type="button"
 							data-bs-toggle="modal" data-bs-target="#cartModal" onclick="open_modal()">
 							<i class="fas fa-shopping-cart me-1"></i> Cart <span
 								class="badge bg-dark text-white ms-1 rounded-pill" id="count_product">0</span>
@@ -59,14 +62,15 @@
 	</nav>
 
 	<!-- Header-->
-	<header class="bg-dark py-5">
-		<div class="container px-4 px-lg-5 my-5">
-			<div class="text-center text-white">
-				<h1 class="display-4 fw-bolder">IT Academy Shop</h1>
-				<p class="lead fw-normal text-white-50 mb-0">Get up to 50% off Today Only!</p>
-			</div>
-		</div>
-	</header>
+    <header class="header-content py-5">
+        <div class="container px-4 px-lg-5 my-5 IT-Academy w-50">
+            <img class="header-image" src="./images/Hero_image.jpg" alt="Header Image">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder">IT Academy Shop</h1>
+                <p class="lead fw-normal text-white-50 mb-0">Get up to 50% off Today Only!</p>
+            </div>
+        </div>
+    </header>
 	<!-- Section-->
 	<section class="pt-5" id="grocery">
 		<h2 class="text-center"><i class="fas fa-shopping-basket pe-3"></i>Grocery</h2>
@@ -74,7 +78,7 @@
 			<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 				<div class="col mb-5">
 					<div class="card h-100">
-						<img class="card-img-top" src="./images/product.svg" alt="..." />
+						<img class="card-img-top" src="./images/Cooking_oil_bottle.jpg" alt="Cooking_oil_bottle" />
 						<div class="card-body p-4">
 							<div class="text-center">
 								<h5 class="fw-bolder">Cooking Oil</h5>
@@ -83,13 +87,13 @@
 						</div>
 						<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 							<div class="text-center"><button type="button" onclick="buy(1)"
-									class="btn btn-outline-dark">Add to cart</button></div>
+									class="btn btn-warning">Add to cart</button></div>
 						</div>
 					</div>
 				</div>
 				<div class="col mb-5">
 					<div class="card h-100">
-						<img class="card-img-top" src="./images/product.svg" alt="..." />
+						<img class="card-img-top" src="./images/pasta.jpg" alt="pasta" />
 						<div class="card-body p-4">
 							<div class="text-center">
 								<h5 class="fw-bolder">Pasta</h5>
@@ -98,13 +102,13 @@
 						</div>
 						<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 							<div class="text-center"><button type="button" onclick="buy(2)"
-									class="btn btn-outline-dark">Add to cart</button></div>
+									class="btn btn-warning">Add to cart</button></div>
 						</div>
 					</div>
 				</div>
 				<div class="col mb-5">
 					<div class="card h-100">
-						<img class="card-img-top" src="./images/product.svg" alt="..." />
+						<img class="card-img-top" src="./images/Instant_cupcake_mixture.jpg" alt="Instant_cupcake_mixture" />
 						<div class="card-body p-4">
 							<div class="text-center">
 								<h5 class="fw-bolder">Instant cupcake mixture</h5>
@@ -113,7 +117,7 @@
 						</div>
 						<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 							<div class="text-center"><button type="button" onclick="buy(3)"
-									class="btn btn-outline-dark">Add to cart</button></div>
+									class="btn btn-warning">Add to cart</button></div>
 						</div>
 					</div>
 				</div>
@@ -127,7 +131,7 @@
 			<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 				<div class="col mb-5">
 					<div class="card h-100">
-						<img class="card-img-top" src="./images/product.svg" alt="..." />
+						<img class="card-img-top" src="./images/All-in-1.jpg" alt="All-in-1" />
 						<div class="card-body p-4">
 							<div class="text-center">
 								<h5 class="fw-bolder">All-in-1</h5>
@@ -136,13 +140,13 @@
 						</div>
 						<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 							<div class="text-center"><button type="button" onclick="buy(4)"
-									class="btn btn-outline-dark">Add to cart</button></div>
+									class="btn btn-warning">Add to cart</button></div>
 						</div>
 					</div>
 				</div>
 				<div class="col mb-5">
 					<div class="card h-100">
-						<img class="card-img-top" src="./images/product.svg" alt="..." />
+						<img class="card-img-top" src="./images/Zero_makeup_kit.jpg" alt="Zero_makeup_kit" />
 						<div class="card-body p-4">
 							<div class="text-center">
 								<h5 class="fw-bolder">Zero makeup kit</h5>
@@ -151,13 +155,13 @@
 						</div>
 						<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 							<div class="text-center"><button type="button" onclick="buy(5)"
-									class="btn btn-outline-dark">Add to cart</button></div>
+									class="btn btn-warning">Add to cart</button></div>
 						</div>
 					</div>
 				</div>
 				<div class="col mb-5">
 					<div class="card h-100">
-						<img class="card-img-top" src="./images/product.svg" alt="..." />
+						<img class="card-img-top" src="./images/Lip_tints.jpg" alt="Lip_tints" />
 						<div class="card-body p-4">
 							<div class="text-center">
 								<h5 class="fw-bolder">Lip tints</h5>
@@ -166,7 +170,7 @@
 						</div>
 						<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 							<div class="text-center"><button type="button" onclick="buy(6)"
-									class="btn btn-outline-dark">Add to cart</button></div>
+									class="btn btn-warning">Add to cart</button></div>
 						</div>
 					</div>
 				</div>
@@ -180,7 +184,7 @@
 			<div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 				<div class="col mb-5">
 					<div class="card h-100">
-						<img class="card-img-top" src="./images/product.svg" alt="..." />
+						<img class="card-img-top" src="./images/Lawn_dress.jpg" alt="Lawn_dress" />
 						<div class="card-body p-4">
 							<div class="text-center">
 								<h5 class="fw-bolder">Lawn dress</h5>
@@ -189,13 +193,13 @@
 						</div>
 						<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 							<div class="text-center"><button type="button" onclick="buy(7)"
-									class="btn btn-outline-dark">Add to cart</button></div>
+									class="btn btn-warning">Add to cart</button></div>
 						</div>
 					</div>
 				</div>
 				<div class="col mb-5">
 					<div class="card h-100">
-						<img class="card-img-top" src="./images/product.svg" alt="..." />
+						<img class="card-img-top" src="./images/Lawn-chiffon_combo.jpg" alt="Lawn-chiffon_combo" />
 						<div class="card-body p-4">
 							<div class="text-center">
 								<h5 class="fw-bolder">Lawn-chiffon combo</h5>
@@ -204,13 +208,13 @@
 						</div>
 						<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 							<div class="text-center"><button type="button" onclick="buy(8)"
-									class="btn btn-outline-dark">Add to cart</button></div>
+									class="btn btn-warning">Add to cart</button></div>
 						</div>
 					</div>
 				</div>
 				<div class="col mb-5">
 					<div class="card h-100">
-						<img class="card-img-top" src="./images/product.svg" alt="..." />
+						<img class="card-img-top" src="./images/Toddler_Frock.jpg" alt="Toddler_Frock" />
 						<div class="card-body p-4">
 							<div class="text-center">
 								<h5 class="fw-bolder">Toddler Frock</h5>
@@ -219,7 +223,7 @@
 						</div>
 						<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
 							<div class="text-center"><button type="button" onclick="buy(9)"
-									class="btn btn-outline-dark">Add to cart</button></div>
+									class="btn btn-warning">Add to cart</button></div>
 						</div>
 					</div>
 				</div>
@@ -278,8 +282,8 @@
 						Total: $<span id="total_price">0.00</span>
 					</div>
 					<div class="text-center">
-						<a href="checkout.html" class="btn btn-primary m-3">Checkout</a>
-						<a href="javascript:void(0)" onclick="cleanCart()" class="btn btn-primary m-3">Clean Cart</a>
+						<a href="checkout.html" class="btn btn-warning m-3">Checkout</a>
+						<a href="javascript:void(0)" onclick="cleanCart()" class="btn btn-warning m-3">Clean Cart</a>
 					</div>
 				</div>
 			</div>
