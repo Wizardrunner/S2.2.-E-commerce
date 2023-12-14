@@ -98,11 +98,16 @@ function buy(id) {
 
         console.log(selectedProduct.name + " added to cart.");
 
-        // Explicitly call printCart to update the modal content
+        // Recalculate the global total after updating the cart
+        total = calculateTotal();
+        totalPriceElement.innerText = total.toFixed(2);
+
+        // Explicitly call applyPromotionsCart and printCart after updating the cart
+        applyPromotionsCart();
         printCart();
     }
 }
-    
+
 // Exercise 2
 function cleanCart() {
     cart = [];
@@ -120,17 +125,13 @@ function cleanCart() {
 
 // Exercise 3
 function calculateTotal() {
-    // Calculate total price of the cart using the "cartList" array
-    var totalPrice = 0;
-
-    for ( let i = 0; i < cart.length; i++) {
-        totalPrice += cart[i].price;
-    }
-    return totalPrice;
+    // Calculate total price of the cart taking into account the quantity of each product
+    return cart.reduce((total, product) => total + product.price * product.quantity, 0);
 }
 
 // Exercise 4
 function applyPromotionsCart() {
+    // Loop through each product in the cart
     for (var i = 0; i < cart.length; i++) {
         var product = cart[i];
 
@@ -139,25 +140,21 @@ function applyPromotionsCart() {
             var quantity = cart.reduce((total, item) => (item.id === product.id ? total + item.quantity : total), 0);
 
             if (quantity >= product.offer.number) {
-                // Apply the discount to all items of this product in the cart
-                for (var j = 0; j < cart.length; j++) {
-                    if (cart[j].id === product.id) {
-                        cart[j].subtotalWithDiscount = cart[j].price * cart[j].quantity * (1 - product.offer.percent / 100);
-                    }
-                }
+                // Set the discount percentage for the product
+                product.discountPercent = product.offer.percent;
             } else {
-                // No applicable offer, so set subtotalWithDiscount to the original price
-                for (var k = 0; k < cart.length; k++) {
-                    if (cart[k].id === product.id) {
-                        cart[k].subtotalWithDiscount = cart[k].price * cart[k].quantity;
-                    }
-                }
+                // No applicable offer, so set discountPercent to 0
+                product.discountPercent = 0;
             }
         } else {
-            // No offer, so set subtotalWithDiscount to the original price
-            product.subtotalWithDiscount = product.price * product.quantity;
+            // No offer, so set discountPercent to 0
+            product.discountPercent = 0;
         }
     }
+}
+// Helper function to calculate the discount for a product
+function calculateDiscount(product) {
+    return (product.discountPercent / 100) * product.price * product.quantity;
 }
 
 // Exercise 5
@@ -177,23 +174,30 @@ function printCart() {
                 var product = groupedCart[productID][0]; // Take the first item as they are the same product
                 var quantity = groupedCart[productID].reduce((total, item) => total + item.quantity, 0);
 
-                // Calculate total price for the product (with discount if applicable)
-                var productTotal = product.subtotalWithDiscount !== undefined ? product.subtotalWithDiscount : product.price * quantity;
-                totalPrice += productTotal;
+                // Only display products with a quantity greater than zero
+                if (quantity > 0) {
+                    // Calculate total price for the product (with discount if applicable)
+                    var discount = product.discountPercent || 0;
+                    var productTotal = product.price * quantity * (1 - discount / 100);
+                    totalPrice += productTotal;
 
-                // Create a new row for each product in the cart_list tbody
-                var row = cartListElement.insertRow();
-                row.innerHTML = `
-                    <td>${product.name}</td>
-                    <td>$${product.price.toFixed(2)}</td>
-                    <td>${quantity}</td>
-                    <td>$${productTotal.toFixed(2)}</td>
-                    <td>
-                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeFromCart(${product.id})">
-                            Remove
-                        </button>
-                    </td>
-                `;
+                    // Create a new row for each product in the cart_list tbody
+                    var row = cartListElement.insertRow();
+                    row.innerHTML = `
+                        <td>${product.name}</td>
+                        <td>$${product.price.toFixed(2)}</td>
+                        <td>${quantity}</td>
+                        <td>$${productTotal.toFixed(2)}</td>
+                        <td>
+                            <button type="button" class="btn btn-outline-success btn-sm" onclick="buy(${product.id})">
+                                +1
+                            </button>
+                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeFromCart(${product.id})">
+                                -1
+                            </button>
+                        </td>
+                    `;
+                }
             }
         }
 
@@ -207,6 +211,7 @@ function printCart() {
         cell.textContent = 'Your cart is empty.';
     }
 }
+
 
 function groupCartByProduct() {
     //Create a map to group cart items by product id
@@ -234,33 +239,36 @@ function removeFromCart(id) {
         // Decrease the quantity by 1
         cart[index].quantity--;
 
-        // If the quantity becomes zero, remove the product from the cart
+        // If the quantity becomes zero, remove the product from the cart and the corresponding row from the modal
         if (cart[index].quantity === 0) {
-            cart.splice(index, 1);
-        }
+            const removedProduct = cart.splice(index, 1)[0];
 
-        // Update promotions after modifying the cart
-        applyPromotionsCart();
+            // If the cart is not empty, recalculate the global total by applying discounts to all products
+            if (cart.length > 0) {
+                total = calculateTotal();
+                totalPriceElement.innerText = total.toFixed(2);
+            } else {
+                // If the cart is empty, reset the total to 0
+                total = 0;
+                totalPriceElement.innerText = total.toFixed(2);
+            }
+
+            // Update promotions after modifying the cart
+            applyPromotionsCart();
+        } else {
+            // If the quantity is not zero, recalculate the global total after updating the cart and applying promotions
+            total = calculateTotal();
+            totalPriceElement.innerText = total.toFixed(2);
+
+            // Update promotions after modifying the cart
+            applyPromotionsCart();
+        }
 
         // Update the count product element
         countProductElement.innerText = cart.reduce((total, product) => total + product.quantity, 0);
 
         // Explicitly call printCart to update the modal content
         printCart();
-
-        // Recalculate the total price after removing from the cart
-        total = calculateTotal();
-        totalPriceElement.innerText = total.toFixed(2);
-
-        // If the cart is empty, reset the total to 0
-        if (cart.length === 0) {
-            total = 0;
-            totalPriceElement.innerText = total.toFixed(2);
-        } else {
-            // Recalculate the total price with promotions if the cart is not empty
-            total = cart.reduce((acc, product) => acc + (product.subtotalWithDiscount || product.price * product.quantity), 0);
-            totalPriceElement.innerText = total.toFixed(2);
-        }
     }
 }
 
